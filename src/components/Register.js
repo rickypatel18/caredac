@@ -1,44 +1,33 @@
 import * as React from "react";
 import Radio from "@mui/material/Radio";
 import backg from "../Assets/caredac.jpg";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import InputAdornment from "@mui/material/InputAdornment";
-import LockIcon from "@mui/icons-material/Lock";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import IconButton from "@mui/material/IconButton";
 import { RadioGroup } from "@mui/material";
-
-// TODO remove, this demo shouldn't need to reset the theme.
 
 const defaultTheme = createTheme();
 
 export default function Register() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    window.location.href = "/Signup";
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
-  };
-  const [showPassword, setShowPassword] = React.useState(false);
+  const [selectedLanguage, setSelectedLanguage] = React.useState("");
+  const [redirecting, setRedirecting] = React.useState(false);
 
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleLanguageChange = (event) => {
+    setSelectedLanguage(event.target.value);
+    // Add a delay before redirecting if you wanty
+    if (event.target.value === "english") {
+      setRedirecting(true);
+      setTimeout(() => {
+        window.location.href = "/login";
+      });
+    }
+  };
 
   return (
     <div
@@ -46,8 +35,9 @@ export default function Register() {
         backgroundImage: `url(${backg})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
+        backgroundAttachment: "fixed",
         backgroundRepeat: "no-repeat",
-        minHeight: "100vh", // Ensure the container fills the entire viewport height
+        minHeight: "100vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -63,6 +53,8 @@ export default function Register() {
               mx: 1,
               color: "default",
             }}
+            value={selectedLanguage}
+            onChange={handleLanguageChange}
           >
             <Box
               sx={{
@@ -70,10 +62,16 @@ export default function Register() {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "left",
+                fontFamily: "Onest",
               }}
             >
-              <Typography component="h1" variant="h4">
-                Select app languages
+              <Typography
+                component="h1"
+                variant="h4"
+                fontWeight={600}
+                sx={{ fontFamily: "Onest,sans-serif" }}
+              >
+                Select app language
               </Typography>
               <Typography
                 component="h1"
@@ -82,61 +80,84 @@ export default function Register() {
                   marginTop: "10px",
                   fontSize: "16px",
                   color: "grey",
+                  fontFamily: "Onest,sans-serif",
+                  marginBottom: "16px  ",
                 }}
               >
                 Select language for your entire application
               </Typography>
               <Divider orientation="horizontal" flexItem />
-              <Grid container sx={{ flexGrow: 1 }} marginTop={1} spacing={1}>
-                <Grid item align="center" xs={5}>
+              <Grid container sx={{ flexGrow: 1 }} marginTop={2} spacing={1}>
+                <Grid item align="center" xs={6}>
                   <Box
                     sx={{
                       display: "flex",
                       flexDirection: "column",
                       justifyContent: "center",
                       backgroundColor: "#ff8339",
-                      width: "150px",
-                      height: "150px",
-                      borderRadius: "10px",
+                      width: "160px",
+                      height: "160px",
+                      borderRadius: "16px",
+                      margin: "5px",
                     }}
                   >
                     <FormControlLabel
                       sx={{
                         marginLeft: "10px",
+                        fontFamily: "Onest,sans-serif",
+                        color: "white",
+                        display: "flex",
+                        flexDirection: "row-reverse",
                       }}
                       value="english"
-                      control={<Radio />}
+                      control={
+                        <Radio
+                          style={{
+                            color:
+                              selectedLanguage === "english"
+                                ? "white"
+                                : "white",
+                          }}
+                        />
+                      } //control={<Radio />}
                       label="English"
                     />
 
                     <Typography
                       variant="h3"
                       sx={{
-                        color: "white",
+                        color:
+                          selectedLanguage === "english" ? "white" : "white",
+                        fontFamily: "Onest,sans-serif",
                       }}
                     >
                       A
                     </Typography>
                   </Box>
                 </Grid>
-                <Grid item align="center" xs={5}>
+                <Grid item align="center" xs={6}>
                   <Box
                     sx={{
                       display: "flex",
                       flexDirection: "column",
                       justifyContent: "center",
                       backgroundColor: "#ff8339",
-                      width: "150px",
-                      height: "150px",
-                      borderRadius: "10px",
+                      width: "160px",
+                      height: "160px",
+                      borderRadius: "16px",
+                      margin: "5px",
                     }}
                   >
                     <FormControlLabel
                       sx={{
                         marginLeft: "10px",
+                        fontFamily: "Onest,sans-serif",
+                        color: "white",
+                        display: "flex",
+                        flexDirection: "row-reverse",
                       }}
                       value="malaysia"
-                      control={<Radio />}
+                      control={<Radio style={{ color: "white" }} />}
                       label="Malaysian"
                     />
 
@@ -144,30 +165,37 @@ export default function Register() {
                       variant="h3"
                       sx={{
                         color: "white",
+                        fontFamily: "Onest,sans-serif",
                       }}
                     >
                       M
                     </Typography>
                   </Box>
                 </Grid>
-                <Grid item align="center" xs={5}>
+
+                <Grid item align="center" xs={6}>
                   <Box
                     sx={{
                       display: "flex",
                       flexDirection: "column",
                       justifyContent: "center",
                       backgroundColor: "#ff8339",
-                      width: "150px",
-                      height: "150px",
-                      borderRadius: "10px",
+                      width: "160px",
+                      height: "160px",
+                      borderRadius: "16px",
+                      marginTop: "15px",
                     }}
                   >
                     <FormControlLabel
                       sx={{
                         marginLeft: "10px",
+                        fontFamily: "Onest,sans-serif",
+                        color: "white",
+                        display: "flex",
+                        flexDirection: "row-reverse",
                       }}
                       value="thai"
-                      control={<Radio />}
+                      control={<Radio style={{ color: "white" }} />}
                       label="Thai"
                     />
 
@@ -175,30 +203,36 @@ export default function Register() {
                       variant="h3"
                       sx={{
                         color: "white",
+                        fontFamily: "Onest,sans-serif",
                       }}
                     >
                       ll
                     </Typography>
                   </Box>
                 </Grid>
-                <Grid item align="center" xs={5}>
+                <Grid item align="center" xs={6}>
                   <Box
                     sx={{
                       display: "flex",
                       flexDirection: "column",
                       justifyContent: "center",
                       backgroundColor: "#ff8339",
-                      width: "150px",
-                      height: "150px",
-                      borderRadius: "10px",
+                      width: "160px",
+                      height: "160px",
+                      borderRadius: "16px",
+                      marginTop: "15px ",
                     }}
                   >
                     <FormControlLabel
                       sx={{
                         marginLeft: "10px",
+                        fontFamily: "Onest,sans-serif",
+                        color: "white",
+                        display: "flex",
+                        flexDirection: "row-reverse",
                       }}
                       value="indo"
-                      control={<Radio />}
+                      control={<Radio style={{ color: "white" }} />}
                       label="Indonesian"
                     />
 
@@ -206,6 +240,7 @@ export default function Register() {
                       variant="h3"
                       sx={{
                         color: "white",
+                        fontFamily: "Onest,sans-serif",
                       }}
                     >
                       l
@@ -214,18 +249,8 @@ export default function Register() {
                 </Grid>
               </Grid>
 
-              <Button
-                type="submit"
-                onClick={handleSubmit}
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Submit
-              </Button>
-
               <Grid item align="center">
-                <Link href="/register" variant="body2"></Link>
+                <Link href="/login" variant="body2"></Link>
               </Grid>
             </Box>
           </RadioGroup>

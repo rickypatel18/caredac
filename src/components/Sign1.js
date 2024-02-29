@@ -1,47 +1,72 @@
 import * as React from "react";
-import Avatar from "@mui/material/Avatar";
 import backg from "../Assets/caredac.jpg";
-
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
-
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import InputAdornment from "@mui/material/InputAdornment";
-import LockIcon from "@mui/icons-material/Lock";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import IconButton from "@mui/material/IconButton";
-import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
-import PhoneOutlinedIcon from "@mui/icons-material/PhoneOutlined";
-
-// TODO remove, this demo shouldn't need to reset the theme.
+import { useForm } from "react-hook-form";
+import { useState, useEffect } from "react";
 
 const defaultTheme = createTheme();
 
-export default function Sign1() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
+export default function Login() {
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+    clearErrors,
+  } = useForm({});
+  const [selectedFiles, setSelectedFiles] = useState(new Array(6).fill(null));
+  const { setError } = useForm();
+
+  const handleFileChange = (event, index) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const updatedFiles = [...selectedFiles];
+        updatedFiles[index] = file;
+        setSelectedFiles(updatedFiles);
+        setValue(`file${index}`, file); // Update form value
+        clearErrors(`file${index}`); // Clear error for the field
+        for (let i = 0; i < index; i++) {
+          if (!updatedFiles[i]) {
+            // Check if previous fields have files uploaded
+            setError(`file${i}`, {
+              type: "manual",
+              message: "Please select a file.",
+            });
+          }
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const onSubmit = (data) => {
+    if (selectedFiles.some((file) => !file)) {
+      return;
+    }
+    console.log(data);
     window.location.href = "/sign2";
   };
-  const [showPassword, setShowPassword] = React.useState(false);
 
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  useEffect(() => {
+    setSelectedFiles((prevFiles) =>
+      prevFiles.map((file, index) => {
+        if (errors[`file${index}`]) {
+          return null;
+        }
+        return file;
+      })
+    );
+  }, [errors]);
 
   return (
     <div
@@ -50,7 +75,8 @@ export default function Sign1() {
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
-        minHeight: "100vh", // Ensure the container fills the entire viewport height
+        backgroundAttachment: "fixed",
+        minHeight: "100vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -67,7 +93,12 @@ export default function Sign1() {
               alignItems: "left",
             }}
           >
-            <Typography component="h1" variant="h4">
+            <Typography
+              component="h1"
+              variant="h4"
+              fontWeight={600}
+              sx={{ fontFamily: "Onest,sans-serif" }}
+            >
               Background check
             </Typography>
             <Typography
@@ -76,167 +107,131 @@ export default function Sign1() {
               sx={{
                 marginTop: "10px",
                 fontSize: "16px",
-                color: "grey",
+                color: "#667085",
+                marginBottom: "16px",
+                fontWeight: "400",
+                fontFamily: "Onest,sans-serif",
               }}
             >
-              Give us some of your documents we will check your profie and
+              Give us some of your document we will check your profile and
               submit your background check badge
             </Typography>
             <Divider orientation="horizontal" flexItem />
+
             <Box
               component="form"
-              onSubmit={handleSubmit}
+              onSubmit={handleSubmit((data) => {
+                console.log(data);
+                window.location.href = "/sign2";
+              })}
               noValidate
-              sx={{ mt: 1 }}
+              sx={{ marginTop: "10px" }}
             >
-              <Typography
-                component="h1"
-                variant="h5"
-                sx={{
-                  marginBottom: "1px",
-                  marginTop: "10px",
-                  fontSize: "16px",
-                }}
-              >
-                COVID-19 compliance
-              </Typography>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="covid"
-                name="covid"
-                autoFocus
-                sx={{
-                  mt: "1px",
-                }}
-              />
-              <Typography
-                component="h1"
-                variant="h5"
-                sx={{
-                  marginBottom: "1px",
-                  marginTop: "10px",
-                  fontSize: "16px",
-                }}
-              >
-                First Aid Certification
-              </Typography>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="certi"
-                name="certi"
-                autoFocus
-                sx={{
-                  mt: "1px",
-                }}
-              />
-              <Typography
-                component="h1"
-                variant="h5"
-                sx={{
-                  marginBottom: "1px",
-                  marginTop: "10px",
-                  fontSize: "16px",
-                }}
-              >
-                NDIS Worker Check(NDISWC)
-              </Typography>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="ndis"
-                name="ndis"
-                autoFocus
-                sx={{
-                  mt: "1px",
-                }}
-              />
-
-              <Typography
-                component="h1"
-                variant="h5"
-                sx={{
-                  marginBottom: "1px",
-                  marginTop: "10px",
-                  fontSize: "16px",
-                }}
-              >
-                Police Check
-              </Typography>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="police"
-                name="poice"
-                autoComplete
-                autoFocus
-                sx={{
-                  mt: "1px",
-                }}
-              />
-
-              <Typography
-                component="h1"
-                variant="h5"
-                sx={{
-                  marginBottom: "1px",
-                  marginTop: "10px",
-                  fontSize: "16px",
-                }}
-              >
-                Working With Child Check
-              </Typography>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="child"
-                autoComplete
-                sx={{
-                  mt: "1px",
-                }}
-              />
-              <Typography
-                component="h1"
-                variant="h5"
-                sx={{
-                  marginBottom: "1px",
-                  marginTop: "10px",
-                  fontSize: "16px",
-                }}
-              >
-                Visa Documentation
-              </Typography>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="visa "
-                id="visa"
-                autoComplete
-                sx={{
-                  mt: "1px",
-                }}
-              />
+              {[
+                "COVID-19 Compliance",
+                "First Aid Certification",
+                "NDIS Worker Check (NDISWC)",
+                "Police Check",
+                "Working With Child Check",
+                "Visa Documentation",
+              ].map((label, index) => (
+                <div key={index}>
+                  <Typography
+                    component="h1"
+                    variant="h5"
+                    sx={{
+                      marginBottom: "5px",
+                      marginTop: "13px",
+                      fontSize: "16px",
+                      color: "#344054",
+                      fontWeight: "500",
+                      fontFamily: "Onest,sans-serif",
+                    }}
+                  >
+                    {label}
+                  </Typography>
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    value={
+                      selectedFiles[index] ? selectedFiles[index].name : ""
+                    }
+                    InputProps={{
+                      sx: { borderRadius: "12px" },
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <Button
+                            disableRipple
+                            sx={{
+                              bgcolor: "white",
+                              color: "black",
+                              border: "none",
+                              "&:hover": { backgroundColor: "transparent" },
+                              fontFamily: "Onest,sans-serif",
+                            }}
+                            component="label"
+                            tabIndex={-1}
+                          >
+                            Upload
+                            <input
+                              type="file"
+                              onChange={(event) =>
+                                handleFileChange(event, index)
+                              }
+                              style={{ display: "none" }}
+                            />
+                          </Button>
+                        </InputAdornment>
+                      ),
+                    }}
+                    sx={{
+                      mt: "1px",
+                    }}
+                    {...register(`file${index}`, {
+                      required: `Please upload a file `,
+                    })}
+                  />
+                  {errors[`file${index}`] && (
+                    <Typography
+                      component="h1"
+                      variant="h6"
+                      color="text.secondary"
+                      fontSize={14}
+                      sx={{
+                        ml: "10px",
+                        color: "red",
+                      }}
+                    >
+                      {errors[`file${index}`].message}
+                    </Typography>
+                  )}
+                </div>
+              ))}
 
               <Button
                 type="submit"
-                onClick={handleSubmit}
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2 }}
+                sx={{
+                  mt: 3,
+                  mb: 2,
+                  borderRadius: "40px",
+                  padding: "10px 18px",
+                  px: "70px",
+                  bgcolor: "#024FAA",
+                  borderRadius: "40px",
+                  border: "1px solid #024FAA ",
+                  textTransform: "none",
+                  paddingTop: "10px",
+                  paddingBottom: "10px",
+                  fontSize: "16px",
+                  fontFamily: "Onest,sans-serif",
+                  fontWeight: 600,
+                }}
               >
                 Next
               </Button>
-
-              <Grid item align="center">
-                <Link href="/sign1" variant="body2"></Link>
-              </Grid>
             </Box>
           </Box>
         </Container>

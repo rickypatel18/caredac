@@ -1,11 +1,8 @@
 import * as React from "react";
 import backg from "../Assets/caredac.jpg";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -21,21 +18,19 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import IconButton from "@mui/material/IconButton";
 import { useForm } from "react-hook-form";
 
-// TODO remove, this demo shouldn't need to reset the theme.
-
 const defaultTheme = createTheme();
 
 export default function Login() {
   const [showPassword, setShowPassword] = React.useState(false);
-
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const {
     register,
     handleSubmit,
     watch,
-
-    formState: { errors },
+    errors,
+    formState: { errors: formErrors },
   } = useForm({});
+
   return (
     <div
       style={{
@@ -43,7 +38,8 @@ export default function Login() {
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
-        minHeight: "100vh", // Ensure the container fills the entire viewport height
+        backgroundAttachment: "fixed",
+        minHeight: "100vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -60,8 +56,12 @@ export default function Login() {
               alignItems: "left",
             }}
           >
-            <Typography component="h1" variant="h3">
-              Login
+            <Typography
+              component="h1"
+              variant="h4 "
+              sx={{ fontWeight: 600, fontFamily: "Onest,sans-serif" }}
+            >
+              Log In
             </Typography>
             <Typography
               component="h1"
@@ -70,16 +70,18 @@ export default function Login() {
                 marginTop: "10px",
                 fontSize: "16px",
                 color: "grey",
+                marginBottom: "16px",
+                fontFamily: "Onest,sans-serif",
               }}
             >
-              Welcome To CareDac
+              Welcome to CareDac
             </Typography>
             <Divider orientation="horizontal" flexItem />
             <Box
               component="form"
               onSubmit={handleSubmit((data) => {
                 console.log(data);
-                window.location.href = "/forgot";
+                window.location.href = "/home";
               })}
               noValidate
               sx={{ mt: 1 }}
@@ -88,10 +90,12 @@ export default function Login() {
                 component="h1"
                 variant="h5"
                 sx={{
-                  marginBottom: "1px",
+                  marginBottom: "10px",
                   marginTop: "10px",
                   fontSize: "16px",
-                  color: "grey",
+                  color: "#344054",
+                  fontWeight: "500",
+                  fontFamily: "Onest,sans-serif",
                 }}
               >
                 Email
@@ -99,17 +103,26 @@ export default function Login() {
               <TextField
                 margin="normal"
                 required
+                placeholder="Enter email"
                 fullWidth
                 id="email"
                 {...register("email", {
-                  required: "This is required",
+                  required: "Please enter your email.",
+                  pattern: {
+                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                    message: "Invalid email address",
+                  },
                 })}
-                autoComplete="email"
                 autoFocus
                 sx={{
                   mt: "1px",
+                  color: "#667085",
                 }}
                 InputProps={{
+                  sx: {
+                    borderRadius: "12px",
+                    fontFamily: "Onest,sans-serif",
+                  },
                   startAdornment: (
                     <InputAdornment position="start">
                       <MailOutlineIcon />
@@ -127,7 +140,7 @@ export default function Login() {
                   color: "red",
                 }}
               >
-                {errors.email?.message}
+                {formErrors.email?.message}
               </Typography>
 
               <Typography
@@ -137,7 +150,10 @@ export default function Login() {
                   marginBottom: "1px",
                   marginTop: "10px",
                   fontSize: "16px",
-                  color: "grey",
+                  fontWeight: "500",
+                  fontFamily: "Onest,sans-serif",
+                  marginBottom: "10px",
+                  color: "#344054",
                 }}
               >
                 Password
@@ -147,15 +163,26 @@ export default function Login() {
                 required
                 fullWidth
                 {...register("password", {
-                  required: "This is required",
+                  required: "Please enter your password.",
+                  minLength: {
+                    value: 6,
+                    message: "Password should be at least 6 characters long.",
+                  },
                 })}
                 type={showPassword ? "text" : "password"}
                 id="password"
                 autoComplete="current-password"
+                placeholder="Enter password"
                 sx={{
                   mt: "1px",
+                  color: "#667085",
+                  fontFamily: "Onest",
                 }}
                 InputProps={{
+                  sx: {
+                    borderRadius: "12px",
+                    fontFamily: "Onest,sans-serif",
+                  },
                   startAdornment: (
                     <InputAdornment position="start">
                       <LockIcon />
@@ -168,7 +195,7 @@ export default function Login() {
                         onClick={handleClickShowPassword}
                         edge="end"
                       >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                        {showPassword ? <Visibility /> : <VisibilityOff />}
                       </IconButton>
                     </InputAdornment>
                   ),
@@ -182,12 +209,23 @@ export default function Login() {
                 sx={{
                   ml: "10px",
                   color: "red",
+                  marginBottom: "12px",
                 }}
               >
-                {errors.password?.message}
+                {formErrors.password?.message}
               </Typography>
               <Grid item align="center">
-                <Link href="forgot" variant="body2">
+                <Link
+                  href="forgot"
+                  variant="body2"
+                  sx={{
+                    textDecoration: "none",
+                    color: "#024FAA",
+                    fontWeight: "600",
+                    fontSize: "14px",
+                    fontFamily: "Inter,sans-serif",
+                  }}
+                >
                   Forgot password?
                 </Link>
               </Grid>
@@ -196,14 +234,43 @@ export default function Login() {
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2 }}
+                sx={{
+                  mt: 3,
+                  mb: 4,
+                  textTransform: "none",
+                  fontSize: "16px",
+                  color: "white",
+                  bgcolor: "#024FAA",
+                  borderRadius: "40px",
+                  padding: "10px 18px",
+                  fontFamily: "Onest,sans-serif",
+                }}
               >
-                Sign In
+                Log In
               </Button>
 
               <Grid item align="center">
-                <Link href="Signup" variant="body2">
-                  {"Don't have an account? Sign Up"}
+                <span
+                  style={{
+                    fontWeight: "400",
+                    color: "#667085",
+                    fontSize: "16px",
+                    fontFamily: "Onest,sans-serif",
+                  }}
+                >
+                  Don't have an account?{" "}
+                </span>
+                <Link
+                  href="/signup"
+                  variant="body2"
+                  sx={{
+                    textDecoration: "none",
+                    color: "#024FAA",
+                    fontWeight: "600",
+                    fontFamily: "Inter",
+                  }}
+                >
+                  Sign Up
                 </Link>
               </Grid>
             </Box>

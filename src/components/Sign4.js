@@ -1,18 +1,8 @@
 import * as React from "react";
-import Avatar from "@mui/material/Avatar";
 import backg from "../Assets/caredac.jpg";
-
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
 import FormGroup from "@mui/material/FormGroup";
-
 import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
@@ -21,29 +11,40 @@ import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import InputAdornment from "@mui/material/InputAdornment";
-import LockIcon from "@mui/icons-material/Lock";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import IconButton from "@mui/material/IconButton";
-import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
-import PhoneOutlinedIcon from "@mui/icons-material/PhoneOutlined";
-
-// TODO remove, this demo shouldn't need to reset the theme.
+import { useForm } from "react-hook-form";
 
 const defaultTheme = createTheme();
 
 export default function Sign4() {
+  const [selectedServices, setSelectedServices] = React.useState([]);
+  const [error, setError] = React.useState("");
+
+  const handleCheckboxChange = (event) => {
+    const { value, checked } = event.target;
+    if (checked) {
+      setSelectedServices((prevSelected) => [...prevSelected, value]);
+      setError("");
+    } else {
+      setSelectedServices((prevSelected) =>
+        prevSelected.filter((item) => item !== value)
+      );
+    }
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
+    if (selectedServices.length === 0) {
+      setError("Please select at least one service.");
+
+      return;
+    }
     window.location.href = "/sign5";
   };
-  const [showPassword, setShowPassword] = React.useState(false);
 
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const {
+    formState: { errors },
+  } = useForm({});
 
   return (
     <div
@@ -52,7 +53,8 @@ export default function Sign4() {
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
-        minHeight: "100vh", // Ensure the container fills the entire viewport height
+        backgroundAttachment: "fixed",
+        minHeight: "100vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -69,7 +71,12 @@ export default function Sign4() {
               alignItems: "left",
             }}
           >
-            <Typography component="h1" variant="h4">
+            <Typography
+              component="h1"
+              variant="h4"
+              fontWeight={600}
+              sx={{ fontFamily: "Onest, sans-serif" }}
+            >
               Service I Offer
             </Typography>
             <Typography
@@ -79,6 +86,8 @@ export default function Sign4() {
                 marginTop: "10px",
                 fontSize: "16px",
                 color: "grey",
+                marginBottom: "16px",
+                fontFamily: "Onest,sans-serif",
               }}
             >
               Select services
@@ -89,46 +98,208 @@ export default function Sign4() {
               component="form"
               onSubmit={handleSubmit}
               noValidate
-              sx={{ mt: 1 }}
+              sx={{ mt: 3 }}
             >
               <FormGroup>
                 <FormControlLabel
-                  control={<Checkbox />}
-                  label="Personal care"
+                  control={
+                    <Checkbox
+                      sx={{
+                        "&.Mui-checked": {
+                          color: "#FC9155",
+                        },
+                      }}
+                      onChange={handleCheckboxChange}
+                      value="Personal care"
+                    />
+                  }
+                  label={
+                    <span
+                      style={{
+                        color: "#344054",
+                        fontWeight: "500",
+                        fontFamily: "Onest,sans-serif",
+                      }}
+                    >
+                      Personal care
+                    </span>
+                  }
                 />
                 <FormControlLabel
-                  required
-                  control={<Checkbox />}
-                  label="Domestic Assistance"
+                  control={
+                    <Checkbox
+                      sx={{
+                        "&.Mui-checked": {
+                          color: "#FC9155",
+                        },
+                      }}
+                      onChange={handleCheckboxChange}
+                      value="Domestic Assistance"
+                    />
+                  }
+                  label={
+                    <span
+                      style={{
+                        color: "#344054",
+                        fontWeight: "500",
+                        fontFamily: "Onest,sans-serif",
+                      }}
+                    >
+                      Domestic Assistance
+                    </span>
+                  }
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      sx={{
+                        "&.Mui-checked": {
+                          color: "#FC9155",
+                        },
+                      }}
+                      onChange={handleCheckboxChange}
+                      value="Social support & community participation"
+                    />
+                  }
+                  label={
+                    <span
+                      style={{
+                        color: "#344054",
+                        fontWeight: "500",
+                        fontFamily: "Onest,sans-serif",
+                      }}
+                    >
+                      Social support & community participation
+                    </span>
+                  }
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      sx={{
+                        "&.Mui-checked": {
+                          color: "#FC9155",
+                        },
+                      }}
+                      onChange={handleCheckboxChange}
+                      value="Specialist Care"
+                    />
+                  }
+                  label={
+                    <span
+                      style={{
+                        color: "#344054",
+                        fontWeight: "500",
+                        fontFamily: "Onest,sans-serif",
+                      }}
+                    >
+                      Specialist Care
+                    </span>
+                  }
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      sx={{
+                        "&.Mui-checked": {
+                          color: "#FC9155",
+                        },
+                      }}
+                      onChange={handleCheckboxChange}
+                      value="Out and About Transport"
+                    />
+                  }
+                  label={
+                    <span
+                      style={{
+                        color: "#344054",
+                        fontWeight: "500",
+                        fontFamily: "Onest,sans-serif",
+                      }}
+                    >
+                      Out and About Transport
+                    </span>
+                  }
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      sx={{
+                        "&.Mui-checked": {
+                          color: "#FC9155",
+                        },
+                      }}
+                      onChange={handleCheckboxChange}
+                      value="Relief Respite Care"
+                    />
+                  }
+                  label={
+                    <span
+                      style={{
+                        color: "#344054",
+                        fontWeight: "500",
+                        fontFamily: "Onest,sans-serif",
+                      }}
+                    >
+                      Relief Respite Care
+                    </span>
+                  }
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      sx={{
+                        "&.Mui-checked": {
+                          color: "#FC9155",
+                        },
+                      }}
+                      onChange={handleCheckboxChange}
+                      value="Coaching & Counselling"
+                    />
+                  }
+                  label={
+                    <span
+                      style={{
+                        color: "#344054",
+                        fontWeight: "500",
+                        fontFamily: "Onest,sans-serif",
+                      }}
+                    >
+                      Coaching & Counselling
+                    </span>
+                  }
                 />
 
                 <FormControlLabel
-                  control={<Checkbox />}
-                  label="Social support & community participation"
-                />
-                <FormControlLabel
-                  control={<Checkbox />}
-                  label="Specialist Care"
-                />
-                <FormControlLabel
-                  control={<Checkbox />}
-                  label="Out and About Transport"
-                />
-                <FormControlLabel
-                  control={<Checkbox />}
-                  label="Relief Respite Care"
-                />
-                <FormControlLabel
-                  control={<Checkbox />}
-                  label="Coaching & Counselling"
-                />
-
-                <FormControlLabel
-                  control={<Checkbox />}
-                  label="Disability Products"
+                  control={
+                    <Checkbox
+                      sx={{
+                        "&.Mui-checked": {
+                          color: "#FC9155",
+                        },
+                      }}
+                      onChange={handleCheckboxChange}
+                      value="Disability Products"
+                    />
+                  }
+                  label={
+                    <span
+                      style={{
+                        color: "#344054",
+                        fontWeight: "500",
+                        fontFamily: "Onest,sans-serif",
+                      }}
+                    >
+                      Disability Products
+                    </span>
+                  }
                 />
               </FormGroup>
-
+              {error && (
+                <Typography variant="body2" color="red">
+                  {error}
+                </Typography>
+              )}
               <Button
                 type="submit"
                 onClick={handleSubmit}
@@ -136,6 +307,15 @@ export default function Sign4() {
                 sx={{
                   marginTop: "14px",
                   px: "200px",
+                  bgcolor: "#024FAA",
+                  borderRadius: "40px",
+                  border: "1px solid #024FAA ",
+                  textTransform: "none",
+                  paddingTop: "10px",
+                  paddingBottom: "10px",
+                  fontSize: "16px",
+                  fontWeight: 600,
+                  fontFamily: "Onest,sans-serif",
                 }}
               >
                 Next

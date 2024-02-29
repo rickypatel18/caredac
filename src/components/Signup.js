@@ -1,13 +1,9 @@
 import * as React from "react";
-import Avatar from "@mui/material/Avatar";
 import backg from "../Assets/caredac.jpg";
-
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
-
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
-
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -31,22 +27,37 @@ import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined
 import PhoneOutlinedIcon from "@mui/icons-material/PhoneOutlined";
 import { useForm } from "react-hook-form";
 
-// TODO remove, this demo shouldn't need to reset the theme.
-
 const defaultTheme = createTheme();
 
 export default function Login() {
   const [showPassword, setShowPassword] = React.useState(false);
-
   const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const [confPassword, setConfPassword] = React.useState(false);
+  const handleClickConfPassword = () => setConfPassword((show) => !show);
 
   const {
     register,
     handleSubmit,
-    watch,
-
     formState: { errors },
+    getValues,
+    clearErrors,
   } = useForm({});
+
+  const [selectedFile, setSelectedFile] = React.useState(null);
+  const [fileError, setFileError] = React.useState(false);
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setSelectedFile(file);
+    setFileError(false); // Clear any previous file error
+  };
+
+  const onSubmit = (data) => {
+    if (!selectedFile) {
+      setFileError(true);
+    }
+  };
 
   return (
     <div
@@ -55,7 +66,8 @@ export default function Login() {
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
-        minHeight: "100vh", // Ensure the container fills the entire viewport height
+        backgroundAttachment: "fixed",
+        minHeight: "100vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -72,8 +84,12 @@ export default function Login() {
               alignItems: "left",
             }}
           >
-            <Typography component="h1" variant="h3">
-              Signup
+            <Typography
+              component="h1"
+              variant="h4"
+              sx={{ fontFamily: "Onest,sans-serif", fontWeight: "600" }}
+            >
+              Create your Profile
             </Typography>
             <Typography
               component="h1"
@@ -82,27 +98,35 @@ export default function Login() {
                 marginTop: "10px",
                 fontSize: "16px",
                 color: "grey",
+                fontFamily: "Onest,sans-serif",
+                marginBottom: "16px",
               }}
             >
-              Welcome To CareDac
+              Enter basic detail for now
             </Typography>
             <Divider orientation="horizontal" flexItem />
+
             <Box
               component="form"
               onSubmit={handleSubmit((data) => {
                 console.log(data);
-                window.location.href = "/otp";
+                window.location.href = "/sign1";
               })}
               noValidate
-              sx={{ mt: 1 }}
+              sx={{
+                fontFamily: "Onest",
+              }}
             >
               <Typography
                 component="h1"
                 variant="h5"
                 sx={{
-                  marginBottom: "1px",
-                  marginTop: "10px",
+                  marginBottom: "10px",
+                  marginTop: "5px",
                   fontSize: "16px",
+                  color: "#344054",
+                  fontWeight: "500",
+                  fontFamily: "Onest,sans-serif",
                 }}
               >
                 Full Name
@@ -110,17 +134,26 @@ export default function Login() {
               <TextField
                 margin="normal"
                 required
-                placeholder="Enter full name"
+                placeholder="Enter Name"
                 fullWidth
                 id="fname"
                 {...register("fname", {
-                  required: "This is required",
+                  required: " Please enter a name",
+                  pattern: {
+                    value: /^[A-Za-z\s]+$/,
+                    message: "Only alphabetic characters are allowed",
+                  },
                 })}
                 autoFocus
                 sx={{
                   mt: "1px",
+                  color: "#667085",
                 }}
                 InputProps={{
+                  sx: {
+                    borderRadius: "12px",
+                    fontFamily: "Onest",
+                  },
                   startAdornment: (
                     <InputAdornment position="start">
                       <PersonOutlineIcon />
@@ -140,111 +173,17 @@ export default function Login() {
               >
                 {errors.fname?.message}
               </Typography>
-              <Typography
-                component="h1"
-                variant="h5"
-                sx={{
-                  marginBottom: "1px",
-                  marginTop: "10px",
-                  fontSize: "16px",
-                }}
-              >
-                Date of Birth
-              </Typography>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="date"
-                {...register("date", {
-                  required: "This is required",
-                })}
-                type="date"
-                autoFocus
-                sx={{
-                  mt: "1px",
-                }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <CalendarTodayOutlinedIcon />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-              <Typography
-                component="h1"
-                variant="h6"
-                color="text.secondary"
-                fontSize={14}
-                sx={{
-                  ml: "10px",
-                  color: "red",
-                }}
-              >
-                {errors.date?.message}
-              </Typography>
-              <Typography
-                component="h1"
-                variant="h5"
-                sx={{
-                  marginBottom: "1px",
-                  marginTop: "10px",
-                  fontSize: "16px",
-                }}
-              >
-                Mobile Number
-              </Typography>
-              <TextField
-                margin="normal"
-                required
-                placeholder="Enter mobile nmmber"
-                fullWidth
-                id="number"
-                {...register("number", {
-                  required: "This is required",
-                  minLength: {
-                    value: 10,
-                    message: "Required Length is 10",
-                  },
-                  maxLength: {
-                    value: 10,
-                    message: "Required Length is 10",
-                  },
-                })}
-                autoFocus
-                sx={{
-                  mt: "1px",
-                }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <PhoneOutlinedIcon />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-              <Typography
-                component="h1"
-                variant="h6"
-                color="text.secondary"
-                fontSize={14}
-                sx={{
-                  ml: "10px",
-                  color: "red",
-                }}
-              >
-                {errors.number?.message}
-              </Typography>
 
               <Typography
                 component="h1"
                 variant="h5"
                 sx={{
-                  marginBottom: "1px",
-                  marginTop: "10px",
+                  marginBottom: "10px",
+                  marginTop: "5px",
                   fontSize: "16px",
-                  color: "grey",
+                  color: "#344054",
+                  fontWeight: "500",
+                  fontFamily: "Onest,sans-serif",
                 }}
               >
                 Email
@@ -252,18 +191,26 @@ export default function Login() {
               <TextField
                 margin="normal"
                 required
+                placeholder="Enter email"
                 fullWidth
                 id="email"
                 {...register("email", {
-                  required: "This is required",
+                  required: "Please enter an email",
+                  pattern: {
+                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                    message: "Invalid email address",
+                  },
                 })}
-                autoComplete="email"
-                placeholder="Enter email"
                 autoFocus
                 sx={{
                   mt: "1px",
+                  color: "#667085",
                 }}
                 InputProps={{
+                  sx: {
+                    borderRadius: "12px",
+                    fontFamily: "Onest",
+                  },
                   startAdornment: (
                     <InputAdornment position="start">
                       <MailOutlineIcon />
@@ -288,10 +235,74 @@ export default function Login() {
                 component="h1"
                 variant="h5"
                 sx={{
-                  marginBottom: "1px",
-                  marginTop: "10px",
+                  marginBottom: "10px",
+                  marginTop: "5px",
                   fontSize: "16px",
-                  color: "grey",
+                  color: "#344054",
+                  fontWeight: "500",
+                  fontFamily: "Onest,sans-serif",
+                }}
+              >
+                Mobile Number
+              </Typography>
+              <TextField
+                margin="normal"
+                required
+                placeholder="Enter mobile number"
+                fullWidth
+                type="number"
+                id="number"
+                {...register("number", {
+                  required: "Please enter a mobile number",
+                  minLength: {
+                    value: 10,
+                    message: "Required Length is 10",
+                  },
+                  maxLength: {
+                    value: 10,
+                    message: "Required Length is 10",
+                  },
+                })}
+                autoFocus
+                sx={{
+                  mt: "1px",
+                  color: "#667085",
+                }}
+                InputProps={{
+                  sx: {
+                    borderRadius: "12px",
+                    fontFamily: "Onest,sans-serif",
+                  },
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <PhoneOutlinedIcon />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <Typography
+                component="h1"
+                variant="h6"
+                color="text.secondary"
+                fontSize={14}
+                sx={{
+                  ml: "10px",
+                  color: "red",
+                }}
+              >
+                {errors.number?.message}
+              </Typography>
+
+              <Typography
+                component="h1"
+                variant="h5"
+                sx={{
+                  marginBottom: "10px",
+                  marginTop: "5px",
+                  fontSize: "16px",
+                  color: "#344054",
+                  fontWeight: "500",
+                  fontFamily: "Onest,sans-serif",
                 }}
               >
                 Password
@@ -301,7 +312,11 @@ export default function Login() {
                 required
                 fullWidth
                 {...register("password", {
-                  required: "This is required",
+                  required: "Please enter a password",
+                  minLength: {
+                    value: 6,
+                    message: "Password should be at least 6 characters long",
+                  },
                 })}
                 type={showPassword ? "text" : "password"}
                 id="password"
@@ -309,8 +324,13 @@ export default function Login() {
                 placeholder="Enter password"
                 sx={{
                   mt: "1px",
+                  color: "#667085",
                 }}
                 InputProps={{
+                  sx: {
+                    borderRadius: "12px",
+                    fontFamily: "Onest",
+                  },
                   startAdornment: (
                     <InputAdornment position="start">
                       <LockIcon />
@@ -323,7 +343,7 @@ export default function Login() {
                         onClick={handleClickShowPassword}
                         edge="end"
                       >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                        {showPassword ? <Visibility /> : <VisibilityOff />}
                       </IconButton>
                     </InputAdornment>
                   ),
@@ -341,14 +361,18 @@ export default function Login() {
               >
                 {errors.password?.message}
               </Typography>
+
+
               <Typography
                 component="h1"
                 variant="h5"
                 sx={{
-                  marginBottom: "1px",
-                  marginTop: "10px",
+                  marginBottom: "10px",
+                  marginTop: "5px",
                   fontSize: "16px",
-                  color: "grey",
+                  color: "#344054",
+                  fontWeight: "500",
+                  fontFamily: "Onest,sans-serif",
                 }}
               >
                 Confirm Password
@@ -358,16 +382,24 @@ export default function Login() {
                 required
                 fullWidth
                 {...register("confirm", {
-                  required: "This is required",
+                  required: "Re-enter a password ",
+                  validate: (value) =>
+                    value === getValues("password") ||
+                    "The passwords do not match",
                 })}
-                type={showPassword ? "text" : "password"}
+                type={confPassword ? "text" : "password"}
                 id="confirm"
                 autoComplete="current-password"
-                placeholder="confrim password"
+                placeholder="Confirm password"
                 sx={{
                   mt: "1px",
+                  color: "#667085",
                 }}
                 InputProps={{
+                  sx: {
+                    borderRadius: "12px",
+                    fontFamily: "Onest,sans-serif",
+                  },
                   startAdornment: (
                     <InputAdornment position="start">
                       <LockIcon />
@@ -377,11 +409,66 @@ export default function Login() {
                     <InputAdornment position="end">
                       <IconButton
                         aria-label="toggle password visibility"
-                        onClick={handleClickShowPassword}
+                        onClick={handleClickConfPassword}
                         edge="end"
                       >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                        {confPassword ? <Visibility /> : <VisibilityOff />}
                       </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+
+              <Typography
+                component="h1"
+                variant="h6"
+                color="text.secondary"
+                fontSize={14}
+                sx={{
+                  ml: "10px",
+                  color: "red",
+                }}
+              >
+                {errors.confirm?.message}
+              </Typography>
+
+              <Typography
+                component="h1"
+                variant="h5"
+                sx={{
+                  marginBottom: "10px",
+                  marginTop: "5px",
+                  fontSize: "16px",
+                  color: "#344054",
+                  fontWeight: "500",
+                  fontFamily: "Onest,sans-serif",
+                }}
+              >
+                Date of Birth
+              </Typography>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="date"
+                {...register("date", {
+                  required: "Please select a date",
+                })}
+                type="date"
+                autoFocus
+                sx={{
+                  mt: "1px",
+                  color: "#667085",
+                  fontFamily: "Onest",
+                }}
+                InputProps={{
+                  sx: {
+                    borderRadius: "12px",
+                    fontFamily: "Onest",
+                  },
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <CalendarTodayOutlinedIcon />
                     </InputAdornment>
                   ),
                 }}
@@ -396,34 +483,178 @@ export default function Login() {
                   color: "red",
                 }}
               >
-                {errors.confirm?.message}
+                {errors.date?.message}
               </Typography>
+
+              <Typography
+                component="h1"
+                variant="h5"
+                sx={{
+                  marginBottom: "10px",
+                  marginTop: "5px",
+                  fontSize: "16px",
+                  color: "#344054",
+                  fontWeight: "500",
+                  fontFamily: "Onest,sans-serif",
+                }}
+              >
+                Upload Image
+              </Typography>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="file"
+                name="file"
+                autoFocus
+                value={selectedFile ? selectedFile.name : ""}
+                InputProps={{
+                  sx: {
+                    borderRadius: "12px",
+                    fontFamily: "Onest",
+                    color: "#344054",
+                  },
+                  placeholder: "Upload image",
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Button
+                        disableRipple
+                        sx={{
+                          marginBottom: "10px",
+                          marginTop: "5px",
+                          color: "#344054",
+                          fontFamily: "Onest,sans-serif",
+                          "&:hover": { backgroundColor: "transparent" },
+                        }}
+                        component="label"
+                        tabIndex={-1}
+                      >
+                        Upload
+                        <input
+                          type="file"
+                          name="file"
+                          onChange={handleFileChange}
+                          id="file"
+                          accept="image/x-png,image/gif,image/jpeg"
+                          style={{ display: "none" }}
+                        />
+                      </Button>
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{
+                  mt: "1px",
+                }}
+              />
+
+              {fileError && (
+                <Typography
+                  component="h1"
+                  variant="h6"
+                  color="text.secondary"
+                  sx={{
+                    ml: "10px",
+                    color: "red",
+                  }}
+                  fontSize={14}
+                >
+                  Please upload an image.
+                </Typography>
+              )}
+
               <FormControl>
-                <FormLabel id="demo-row-radio-buttons-group-label">
+                <FormLabel
+                  sx={{
+                    marginBottom: "0px",
+                    marginTop: "5px",
+                    fontSize: "16px",
+                    color: "#344054",
+                    fontWeight: "500",
+                    fontFamily: "Onest,sans-serif",
+                    "&.Mui-focused": {
+                      color: "#344054",
+                    },
+                  }}
+                >
                   Gender
                 </FormLabel>
                 <RadioGroup
+                  id="gender"
                   {...register("gender", {
-                    required: "This is required",
+                    required: "Please select a gender",
                   })}
                   row
                   aria-labelledby="demo-row-radio-buttons-group-label"
                   name="row-radio-buttons-group"
+                  sx={{
+                    fontSize: "16px",
+                    fontFamily: "Onest",
+                    fontWeight: "900",
+                    fontSize: "16px",
+                    marginTop: "1px",
+                  }}
                 >
                   <FormControlLabel
-                    value="female"
-                    control={<Radio />}
-                    label="Female"
-                  />
-                  <FormControlLabel
                     value="male"
-                    control={<Radio />}
-                    label="Male"
+                    control={
+                      <Radio
+                        sx={{
+                          "&.Mui-checked": {
+                            color: "#FC9155",
+                          },
+                        }}
+                      />
+                    }
+                    label={
+                      <span style={{ fontFamily: "Inter, sans-serif" }}>
+                        Male
+                      </span>
+                    }
+                    {...register("gender", {
+                      required: "Please select your gender",
+                    })}
                   />
+
+                  <FormControlLabel
+                    value="female"
+                    control={
+                      <Radio
+                        sx={{
+                          "&.Mui-checked": {
+                            color: "#FC9155",
+                          },
+                        }}
+                      />
+                    }
+                    label={
+                      <span style={{ fontFamily: "Inter, sans-serif" }}>
+                        Female
+                      </span>
+                    }
+                    {...register("gender", {
+                      required: "Please select your gender",
+                    })}
+                  />
+
                   <FormControlLabel
                     value="other"
-                    control={<Radio />}
-                    label="Non Binary"
+                    control={
+                      <Radio
+                        sx={{
+                          "&.Mui-checked": {
+                            color: "#FC9155",
+                          },
+                        }}
+                      />
+                    }
+                    label={
+                      <span style={{ fontFamily: "Inter, sans-serif" }}>
+                        Non Binary
+                      </span>
+                    }
+                    {...register("gender", {
+                      required: "Please select your gender",
+                    })}
                   />
                 </RadioGroup>
               </FormControl>
@@ -439,40 +670,110 @@ export default function Login() {
               >
                 {errors.gender?.message}
               </Typography>
+
               <Grid container spacing={0}>
                 <Grid item>
                   <FormControlLabel
-                    control={<Checkbox value="remember" color="primary" />}
+                    sx={{
+                      marginTop: -3,
+                    }}
+                    control={
+                      <Checkbox
+                        sx={{
+                          "&.Mui-checked": {
+                            color: "#FC9155",
+                          },
+                        }}
+                        {...register("agree", {
+                          required:
+                            "You must agree to the Terms and Conditions",
+                        })}
+                      />
+                    }
+                    label={
+                      <Typography
+                        component="span"
+                        variant="h6"
+                        fontSize={16}
+                        marginTop={4}
+                        sx={{
+                          ml: "10px",
+                          color: "#344054",
+                          marginBottom: "8px",
+                          fontFamily: "Onest",
+                          fontWeight: "500",
+                          fontSize: "16px",
+                          fontFamily: "Onest,sans-serif",
+                        }}
+                      >
+                        By continuing, you agree to our Terms and Conditions
+                      </Typography>
+                    }
                   />
                 </Grid>
-                <Grid item xs>
-                  <Typography
-                    component="h1"
-                    variant="h5"
-                    sx={{
-                      marginBottom: "1px",
-                      marginTop: "10px",
-                      fontSize: "14px",
-                      color: "grey",
-                    }}
-                  >
-                    By continuing,you agree to our Terms and Conditions
-                  </Typography>
-                </Grid>
               </Grid>
-
+              <Typography
+                component="h1"
+                variant="h6"
+                color="text.secondary"
+                fontSize={14}
+                sx={{
+                  ml: "10px",
+                  color: "red",
+                }}
+              >
+                {errors.agree?.message}
+              </Typography>
               <Button
                 type="submit"
                 fullWidth
+                onClick={onSubmit}
                 variant="contained"
-                sx={{ mt: 3, mb: 2 }}
+                sx={{
+                  mt: 3,
+                  mb: 2,
+                  textTransform: "none",
+                  fontSize: "16px",
+                  color: "white",
+                  bgcolor: "#024FAA",
+                  borderRadius: "40px",
+                  padding: "10px 18px",
+                  fontFamily: "Onest,sans-serif",
+                }}
               >
                 Sign up
               </Button>
-
-              <Grid item align="center">
-                <Link href="/login" variant="body2">
-                  {"Already have an account? Login"}
+              <Grid
+                item
+                align="center"
+                sx={{
+                  fontSize: "16px",
+                  fontFamily: "Onest",
+                  fontWeight: "500",
+                  fontSize: "14px",
+                }}
+              >
+                <span
+                  style={{
+                    fontWeight: "400",
+                    color: "#667085",
+                    fontSize: "16px",
+                    fontFamily: "Onest,sans-serif",
+                  }}
+                >
+                  Already have an account?{" "}
+                </span>
+                <Link
+                  href="/login"
+                  variant="body2"
+                  sx={{
+                    color: "#024FAA",
+                    fontWeight: "600",
+                    fontFamily: "Inter",
+                    textDecoration: "none",
+                  }}
+                >
+                  Login
                 </Link>
               </Grid>
             </Box>

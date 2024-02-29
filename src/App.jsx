@@ -19,13 +19,15 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
+
+        <Route path="register" exact element={<Register />}></Route>
         <Route path="login" exact element={<Login />}></Route>
         <Route path="Signup" element={<Signup />}></Route>
         <Route path="forgot" element={<Forgotpass />}></Route>
         <Route path="reset" element={<Resetpass />}></Route>
         <Route path="otp" element={<Emailverify />}></Route>
         <Route path="sign1" element={<Sign1 />}></Route>
-        <Route path="sign2" element={<Sign2 />}></Route>
+        <Route path="sign2" exact element={<Sign2 />}></Route>
         <Route path="sign3" element={<Sign3 />}></Route>
         <Route path="sign4" element={<Sign4 />}></Route>
         <Route path="sign5" element={<Sign5 />}></Route>
