@@ -179,11 +179,11 @@ export default function EditBankDetail() {
                         borderRadius: "12px",
                         fontFamily: "Onest",
                       },
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <PersonOutlineIcon /> 
-                        </InputAdornment>
-                      ),
+                      // startAdornment: (
+                      //   <InputAdornment position="start">
+                      //     <PersonOutlineIcon /> 
+                      //   </InputAdornment>
+                      // ),
                     }}
                   />
                   <Typography
